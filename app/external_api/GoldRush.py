@@ -13,7 +13,7 @@ class GoldRushWrapper:
     def wallet_assets_by_chain(self, chainName: str, walletAddress: str):
         response = self.client.get(
             f"/{chainName}/address/{walletAddress}/balances_v2/",
-            params={"key": settings.GOLDRUSH_API_KEY},
+            params={"key": settings.GOLDRUSH_API_KEY, "quote-currency": "USD"},
         )
         if response.status_code == 200:
             return response.json()

@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     )
     PROJECT_NAME: str
     API_V1_STR: str = "/api/v1"
+    GOLDRUSH_API_KEY: str = ""
 
 
 settings = Settings()
