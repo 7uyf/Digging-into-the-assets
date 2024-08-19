@@ -1,15 +1,6 @@
-from httpx import Client, Auth
+from httpx import Client
 from app.config import settings
-
-
-class GoldRushAuth(Auth):
-    def __init__(self, token):
-        self.token = token
-
-    def auth_flow(self, request):
-        # Send the request, with a custom `X-Authentication` header.
-        request.headers["API_KEY"] = self.token
-        yield request
+from app.errors import NotFoundError
 
 
 class GoldRushWrapper:
@@ -17,14 +8,19 @@ class GoldRushWrapper:
     client: Client
 
     def __init__(self) -> None:
-        auth = GoldRushAuth(settings.GOLDRUSH_API_KEY)
-        self.client = Client(base_url=self.url, auth=auth)
+        self.client = Client(base_url=self.url)
 
     def wallet_assets_by_chain(self, chainName: str, walletAddress: str):
         response = self.client.get(
-            f"/v1/{chainName}/address/{walletAddress}/balances_v2/"
+            f"/{chainName}/address/{walletAddress}/balances_v2/",
+            params={"key": settings.GOLDRUSH_API_KEY},
         )
-        return response.json()
+        if response.status_code == 200:
+            return response.json()
+        elif response.status_code == 404:
+            raise NotFoundError()
+        else:
+            raise RuntimeError(response)
 
 
 goldRush_api = GoldRushWrapper()
