@@ -1,0 +1,8 @@
+had problem with using python because of lack of experince didnt have time to add the following:
+
+- sterilization and validation from goldRush 
+- abstraction layer above goldRush
+- robust error handling system 
+-  no tests
+- wrapper has copypaste code
+- router ha copypaste code
