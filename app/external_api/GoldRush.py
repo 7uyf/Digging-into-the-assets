@@ -22,5 +22,19 @@ class GoldRushWrapper:
         else:
             raise RuntimeError(response)
 
+    def wallet_transactions_by_chain(
+        self, chainName: str, walletAddress: str, page: int
+    ):
+        response = self.client.get(
+            f"{chainName}/address/{walletAddress}/transactions_v3/page/{page}/",
+            params={"key": settings.GOLDRUSH_API_KEY, "quote-currency": "USD"},
+        )
+        if response.status_code == 200:
+            return response.json()
+        elif response.status_code == 404:
+            raise NotFoundError()
+        else:
+            raise RuntimeError(response)
+
 
 goldRush_api = GoldRushWrapper()

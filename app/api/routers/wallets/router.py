@@ -36,3 +36,21 @@ async def wallet_assets_by_chain(
         return sum
     except NotFoundError:
         response.status_code = status.HTTP_404_NOT_FOUND
+
+
+@wallets_router.get(
+    "/{wallet_address}/chains/{chain_name}/transactions/", status_code=200
+)
+async def wallet_assets_by_chain(
+    wallet_address: str,
+    chain_name: str,
+    page: int,
+    response: Response,
+):
+    try:
+        return goldRush_api.wallet_transactions_by_chain(
+            walletAddress=wallet_address, chainName=chain_name, page=page
+        )["data"]["items"]
+
+    except NotFoundError:
+        response.status_code = status.HTTP_404_NOT_FOUND
